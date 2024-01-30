@@ -128,20 +128,33 @@ void syncMainToDataBook(const vector<book> &lb) {
 //    cout << "<SYNC SYSTEM TO DATA SUCCESS !>" << endl;
 }
 
-void borrowBook(vector<book> &lb, vector<book> &lu) {
+void borrowBook(vector<book> &lb, vector<book> &lu, string &un) {
     cout << "-BORROW BOOK-" << endl;
 
-    string titleBook = "";
+    string titleBorrowBook = "N/A";
     cout << "Enter Title Book to borrow: ";
-    getline(cin,titleBook);
+    getline(cin,titleBorrowBook);
 
     bool isExists = false;
     for (int i = 0; i < lb.size(); i++) {
-        if (titleBook == lb[i].title && lb[i].quantity > 0) {
+        if (titleBorrowBook == lb[i].title && lb[i].quantity > 0) {
             isExists = true;
-            lb[i].quantity--;
+
+            // get borrow day + return day
+
             cout << "<BORROW SUCCESS !>" << endl;
             // need build user borrow book -> add infor book to DataBorrowBook
+            for (int j = 0; j < lu.size(); j++) {
+                if (lu[j].username == un) {
+                    lu[j].listBorrowBook.title = lb[i].title;
+                    lu[j].listBorrowBook.author = lb[i].author;
+                    lu[j].listBorrowBook.quantity = lb[i].quantity;
+                    lu[j].listBorrowBook.borrowDay = lb[i].borrowDay;
+                    lu[j].listBorrowBook.returnDay = lb[i].returnDay;
+                    break;
+                }
+            }
+            lb[i].quantity--;
             break;
         }
     }
@@ -310,6 +323,7 @@ int main() {
     //RAM
     vector<book> listBook;
     vector<user> listUser;
+
 
     //load data
     syncDataUserToMain(listUser);
